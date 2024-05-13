@@ -3,8 +3,11 @@ package com.example.likesapp
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Paint
+import android.graphics.Path
 import android.graphics.Rect
 import android.graphics.RectF
+import android.graphics.Region
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -31,19 +34,27 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-    
+        
+        binding.imageView.setImageBitmap(mBitmap)
+        
         showText()
         
         binding.like.setOnClickListener {
+            showEars()
             showFace()
             showMouth(true)
             showEyes()
+            showNose()
+            showHair()
         }
 
         binding.dislike.setOnClickListener {
+            showEars()
             showFace()
             showMouth(false)
             showEyes()
+            showNose()
+            showHair()
         }
     }
 
@@ -61,6 +72,34 @@ class MainActivity : AppCompatActivity() {
         val x: Float = halfOfWidth - mBounds.centerX()
         val y = 50F
         mCanvas.drawText(message, x, y, mPaintText)
+    }
+
+    private fun showHair() {
+        mCanvas.save()
+
+        val path = Path()
+
+        path.addCircle(halfOfWidth - 100F,halfOfHeight - 10F, 150F, Path.Direction.CCW)
+        path.addCircle(halfOfWidth + 100F,halfOfHeight - 10F, 150F, Path.Direction.CCW)
+
+        val mouth = RectF(halfOfWidth - 250F, halfOfHeight, halfOfWidth + 250F, halfOfHeight + 500F)
+        path.addOval(mouth, Path.Direction.CCW)
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+            mCanvas.clipPath(path, Region.Op.DIFFERENCE)
+        } else {
+            mCanvas.clipOutPath(path)
+        }
+
+        val face = RectF(left, top, right, bottom)
+
+        mPaint.color = ResourcesCompat.getColor(resources, R.color.brown_left_hair, null)
+        mCanvas.drawArc(face, 90F, 180F, false, mPaint)
+
+        mPaint.color = ResourcesCompat.getColor(resources, R.color.brown_right_hair, null)
+        mCanvas.drawArc(face, 270F, 180F, false, mPaint)
+
+        mCanvas.restore()
     }
     
     private fun showFace() {
@@ -83,6 +122,24 @@ class MainActivity : AppCompatActivity() {
         mCanvas.drawCircle(halfOfWidth + 80F, halfOfHeight - 20F, 15F, mPaint)
     }
 
+    private fun showEars() {
+        mPaint.color = ResourcesCompat.getColor(resources, R.color.brown_left_hair, null)
+        mCanvas.drawCircle(halfOfWidth - 300F, halfOfHeight - 100F, 100F, mPaint)
+
+        mPaint.color = ResourcesCompat.getColor(resources, R.color.brown_right_hair, null)
+        mCanvas.drawCircle(halfOfWidth + 300F, halfOfHeight - 100F, 100F, mPaint)
+
+        mPaint.color = ResourcesCompat.getColor(resources, R.color.red_ear, null)
+        mCanvas.drawCircle(halfOfWidth - 300F, halfOfHeight - 100F, 60F, mPaint)
+        mCanvas.drawCircle(halfOfWidth + 300F, halfOfHeight - 100F, 60F, mPaint)
+    }
+    
+    private fun showNose() {
+        mPaint.color = ResourcesCompat.getColor(resources, R.color.black, null)
+        mCanvas.drawCircle(halfOfWidth - 40F, halfOfHeight + 140F, 15F, mPaint)
+        mCanvas.drawCircle(halfOfWidth + 40F, halfOfHeight + 140F, 15F, mPaint)
+    }
+    
     private fun showMouth(isHappy: Boolean) {
         when (isHappy) {
             true -> {

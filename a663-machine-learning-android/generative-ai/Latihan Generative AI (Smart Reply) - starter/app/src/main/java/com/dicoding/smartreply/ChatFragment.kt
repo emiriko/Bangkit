@@ -19,6 +19,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dicoding.smartreply.databinding.FragmentChatBinding
+import java.util.Calendar
 
 class ChatFragment : Fragment() {
 
@@ -70,6 +71,12 @@ class ChatFragment : Fragment() {
 
         chatViewModel = ViewModelProvider(this).get(ChatViewModel::class.java)
 
+        if (chatViewModel.chatHistory.value == null){
+            val chatHistory = ArrayList<Message>()
+            chatHistory.add(Message("Hello friend. How are you today?", false, System.currentTimeMillis()))
+            chatViewModel.setMessages(chatHistory)
+        }
+        
         chatViewModel.chatHistory.observe(viewLifecycleOwner) { messages ->
             chatAdapter.setChatHistory(messages)
             if (chatAdapter.itemCount > 0) {
@@ -77,6 +84,10 @@ class ChatFragment : Fragment() {
             }
         }
 
+        chatViewModel.smartReplyOptions.observe(viewLifecycleOwner) { options ->
+            replyOptionsAdapter.setReplyOptions(options)
+        }
+        
         chatViewModel.pretendingAsAnotherUser.observe(viewLifecycleOwner) { isPretendingAsAnotherUser ->
             if (isPretendingAsAnotherUser) {
                 binding.tvCurrentUser.text = requireContext().getText(R.string.chatting_as_evans)
@@ -125,6 +136,10 @@ class ChatFragment : Fragment() {
         binding.btnSend.setOnClickListener {
             val input = binding.tietInputTextEditText.text.toString()
             if (input.isNotEmpty()) {
+
+                chatViewModel.addMessage(input)
+                binding.tietInputTextEditText.text?.clear()
+                
                 val imm = requireContext().getSystemService(
                     Context.INPUT_METHOD_SERVICE
                 ) as InputMethodManager
@@ -161,11 +176,32 @@ class ChatFragment : Fragment() {
     }
 
     private fun generateBasicChatHistory() {
+        val chatHistory = ArrayList<Message>()
+        val calendar = Calendar.getInstance() // Get the current time
 
+        calendar.add(Calendar.MINUTE, -10)
+        chatHistory.add(Message("Hello", true, calendar.timeInMillis))
+
+        calendar.add(Calendar.MINUTE, 10)
+        chatHistory.add(Message("Hey", false, calendar.timeInMillis))
+
+        chatViewModel.setMessages(chatHistory)
     }
 
     private fun generateSensitiveChatHistory() {
+        val chatHistory = ArrayList<Message>()
+        val calendar = Calendar.getInstance()
 
+        calendar.add(Calendar.MINUTE, -10)
+        chatHistory.add(Message("Hi", false, calendar.timeInMillis))
+
+        calendar.add(Calendar.MINUTE, 1)
+        chatHistory.add(Message("How are you?", true, calendar.timeInMillis))
+
+        calendar.add(Calendar.MINUTE, 10)
+        chatHistory.add(Message("My cat died", false, calendar.timeInMillis))
+
+        chatViewModel.setMessages(chatHistory)
     }
 
 }

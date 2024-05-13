@@ -15,6 +15,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.btnPredict.isEnabled = false
         predictionHelper = PredictionHelper(
             context = this,
             onResult = { result ->
@@ -22,6 +23,9 @@ class MainActivity : AppCompatActivity() {
             },
             onError = { errorMessage ->
                 Toast.makeText(this@MainActivity, errorMessage, Toast.LENGTH_SHORT).show()
+            },
+            onDownloadSuccess = {
+                binding.btnPredict.isEnabled = true
             }
         )
         binding.btnPredict.setOnClickListener {
