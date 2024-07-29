@@ -1,4 +1,7 @@
 package com.alvaro.mysimplecleanarchitecture.data
 
-class IMessageDataSource {
+import com.alvaro.mysimplecleanarchitecture.domain.entities.MessageEntity
+
+interface IMessageDataSource {
+    fun getMessageFromSource(name: String): MessageEntity
 }

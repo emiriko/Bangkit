@@ -1,4 +1,7 @@
 package com.alvaro.mysimplecleanarchitecture.domain.usecases
 
-class MessageUseCase {
+import com.alvaro.mysimplecleanarchitecture.domain.entities.MessageEntity
+
+interface MessageUseCase {
+    fun getMessage(name: String): MessageEntity
 }

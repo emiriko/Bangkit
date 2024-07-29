@@ -1,4 +1,4 @@
-package com.alvaro.mysimplecleanarchitecture
+package com.alvaro.mysimplecleanarchitecture.presentation
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -10,7 +10,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.alvaro.mysimplecleanarchitecture.ui.theme.MySimpleCleanArchitectureTheme
+import com.alvaro.mysimplecleanarchitecture.presentation.ui.SimpleCleanArchitectureApp
+import com.alvaro.mysimplecleanarchitecture.presentation.ui.theme.MySimpleCleanArchitectureTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,25 +23,9 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Greeting("Android")
+                    SimpleCleanArchitectureApp()
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    MySimpleCleanArchitectureTheme {
-        Greeting("Android")
     }
 }

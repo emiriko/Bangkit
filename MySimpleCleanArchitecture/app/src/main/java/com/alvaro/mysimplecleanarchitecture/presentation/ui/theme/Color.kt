@@ -1,4 +1,4 @@
-package com.alvaro.mysimplecleanarchitecture.ui.theme
+package com.alvaro.mysimplecleanarchitecture.presentation.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
